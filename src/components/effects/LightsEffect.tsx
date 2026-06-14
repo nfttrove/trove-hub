@@ -1,63 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
-interface Light {
-  id: number;
-  position: number;
-  color: string;
-  delay: number;
+const colors = ['#ff3b3b', '#37e06a', '#3b82f6', '#ffd23b', '#ff5ce0', '#36e0ff', '#ff8a3b', '#ffffff'];
+const COUNT = 26;
+
+// Gentle sagging wire across the top; bulbs hang from it.
+function wireY(f: number) {
+  return 42 + 16 * Math.sin(f * Math.PI * 5);
 }
 
-const lightColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#ffffff'];
-
 export function LightsEffect() {
-  const [lights, setLights] = useState<Light[]>([]);
+  const bulbs = useMemo(
+    () =>
+      Array.from({ length: COUNT }, (_, i) => {
+        const f = (i + 0.5) / COUNT;
+        return { id: i, x: f * 100, y: wireY(f), color: colors[i % colors.length], delay: (i % 6) * 0.22 };
+      }),
+    [],
+  );
 
-  useEffect(() => {
-    const lightArray = Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      position: (i + 1) * (100 / 31),
-      color: lightColors[i % lightColors.length],
-      delay: Math.random() * 2,
-    }));
-    setLights(lightArray);
+  const wirePath = useMemo(() => {
+    const pts = Array.from({ length: 121 }, (_, k) => {
+      const f = k / 120;
+      return `${(f * 1920).toFixed(1)},${wireY(f).toFixed(1)}`;
+    });
+    return 'M ' + pts.join(' L ');
   }, []);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <svg className="absolute top-0 w-full h-32" viewBox="0 0 1920 200" preserveAspectRatio="none">
-        <path
-          d="M 0,50 Q 240,80 480,50 T 960,50 T 1440,50 T 1920,50"
-          stroke="rgba(50,50,50,0.6)"
-          strokeWidth="3"
-          fill="none"
-        />
+      <svg className="absolute top-0 left-0 w-full" height="110" viewBox="0 0 1920 110" preserveAspectRatio="none">
+        <path d={wirePath} stroke="rgba(38,42,50,0.85)" strokeWidth="2.5" fill="none" />
       </svg>
 
-      {lights.map((light, index) => {
-        const x = (index + 1) * (100 / 31);
-        const y = 50 + (index % 2 === 0 ? 15 : -15) * Math.sin((index * Math.PI) / 4);
-
-        return (
+      {bulbs.map((b) => (
+        <div key={b.id} className="absolute" style={{ left: `${b.x}%`, top: `${b.y}px`, transform: 'translateX(-50%)' }}>
+          <div style={{ width: 4, height: 5, margin: '0 auto', background: '#3a3f47', borderRadius: '1px 1px 0 0' }} />
           <div
-            key={light.id}
-            className="absolute animate-christmas-light"
+            className="animate-christmas-light"
             style={{
-              left: `${x}%`,
-              top: `${y}px`,
-              animationDelay: `${light.delay}s`,
+              width: 11,
+              height: 16,
+              borderRadius: '50% 50% 50% 50% / 38% 38% 62% 62%',
+              background: `radial-gradient(42% 36% at 40% 30%, #ffffff 0%, ${b.color} 46%, ${b.color} 100%)`,
+              boxShadow: `0 0 8px ${b.color}, 0 0 16px ${b.color}88`,
+              animationDelay: `${b.delay}s`,
             }}
-          >
-            <div
-              className="w-4 h-6 rounded-full"
-              style={{
-                backgroundColor: light.color,
-                boxShadow: `0 0 15px ${light.color}, 0 0 30px ${light.color}`,
-                filter: 'brightness(1.2)',
-              }}
-            />
-          </div>
-        );
-      })}
+          />
+        </div>
+      ))}
     </div>
   );
 }
