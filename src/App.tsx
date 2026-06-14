@@ -9,12 +9,14 @@ import { ReactiveEffects } from './components/ReactiveEffects';
 import { ControlRoom } from './components/ControlRoom';
 import { ParticlesProvider } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
+import { loadEmojiShape } from '@tsparticles/shape-emoji';
 import type { Engine } from '@tsparticles/engine';
 import { useEffectConfig } from './hooks/useEffectConfig';
 import { useMarketDirection, gradientForDirection } from './lib/marketStatus';
 
 const initParticles = async (engine: Engine) => {
   await loadSlim(engine);
+  await loadEmojiShape(engine);
 };
 
 function App() {
@@ -118,6 +120,8 @@ function App() {
             updateEffectTypes(effects);
             updateBgColors(colors);
           }}
+          currentEffects={effectTypes}
+          currentColors={bgColors}
           onClose={() => setShowPresets(false)}
         />
       )}

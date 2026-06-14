@@ -101,7 +101,7 @@ export function DeadZoneConfig({ deadZones, onDeadZonesChange, effectArea, onEff
       <div className={`${ui.card} p-4 mb-5`}>
         <p className="text-[13px] font-medium text-neutral-200 mb-2.5">Effect layer</p>
         <div className="flex gap-0.5 p-0.5 rounded-lg bg-white/5 border border-white/10 mb-2.5">
-          {seg('foreground', 'Foreground')}
+          {seg('foreground', 'Overlay')}
           {seg('frame', 'Frame (behind)')}
         </div>
         <p className="text-[12px] text-neutral-500 mb-3">

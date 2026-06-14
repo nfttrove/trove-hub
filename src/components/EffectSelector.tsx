@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Search, Bookmark, Palette, Sliders, LayoutGrid, Radio, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
-export type EffectType = 'snow' | 'fire' | 'confetti' | 'rockets' | 'bubbles' | 'stars' | 'rain' | 'leaves' | 'matrix' | 'fireflies' | 'lights' | 'santa' | 'petals' | 'butterflies' | 'sparkles' | 'balloons' | 'dandelion' | 'pirate' | 'turkey' | 'bricks' | 'hearts' | 'ghosts' | 'coins' | 'music' | 'math' | 'disco' | 'dvd' | 'flappy' | 'snow_pro' | 'datarain' | 'network';
+export type EffectType = 'snow' | 'stars' | 'matrix' | 'network' | 'confetti' | 'sparkles' | 'fireflies' | 'fire' | 'rain' | 'lights' | 'disco' | 'balloons' | 'bricks' | 'rockets' | 'hearts' | 'ghosts' | 'music' | 'math' | 'santa' | 'turkey' | 'pirate' | 'dvd';
 
 interface EffectSelectorProps {
   selectedEffects: EffectType[];
@@ -15,40 +15,31 @@ interface EffectSelectorProps {
   onToggleVisible: () => void;
 }
 
-interface EffectMeta { type: EffectType; label: string; icon: string; pro?: boolean }
+interface EffectMeta { type: EffectType; label: string; icon: string }
 
 const EFFECTS: EffectMeta[] = [
-  { type: 'snow_pro', label: 'Snow', icon: '🌨️', pro: true },
-  { type: 'datarain', label: 'Data Rain', icon: '🟩', pro: true },
-  { type: 'network', label: 'Network', icon: '🕸️', pro: true },
   { type: 'snow', label: 'Snow', icon: '❄️' },
+  { type: 'stars', label: 'Stars', icon: '⭐' },
+  { type: 'matrix', label: 'Matrix', icon: '💚' },
+  { type: 'network', label: 'Network', icon: '🕸️' },
+  { type: 'confetti', label: 'Confetti', icon: '🎊' },
+  { type: 'sparkles', label: 'Sparkles', icon: '✨' },
+  { type: 'fireflies', label: 'Fireflies', icon: '🔆' },
+  { type: 'fire', label: 'Fire', icon: '🔥' },
+  { type: 'rain', label: 'Rain', icon: '🌧️' },
   { type: 'lights', label: 'Lights', icon: '🎄' },
   { type: 'disco', label: 'Disco', icon: '🪩' },
-  { type: 'dvd', label: 'DVD', icon: '📀' },
-  { type: 'flappy', label: 'Flappy', icon: '🐦' },
-  { type: 'santa', label: 'Presents', icon: '🎁' },
-  { type: 'turkey', label: 'Turkey', icon: '🦃' },
+  { type: 'balloons', label: 'Balloons', icon: '🎈' },
+  { type: 'bricks', label: 'Bricks', icon: '🧱' },
+  { type: 'rockets', label: 'Rockets', icon: '🚀' },
   { type: 'hearts', label: 'Hearts', icon: '❤️' },
   { type: 'ghosts', label: 'Ghosts', icon: '👻' },
-  { type: 'fire', label: 'Fire', icon: '🔥' },
-  { type: 'confetti', label: 'Confetti', icon: '🎊' },
-  { type: 'rockets', label: 'Rockets', icon: '🚀' },
-  { type: 'bubbles', label: 'Bubbles', icon: '🫧' },
-  { type: 'stars', label: 'Stars', icon: '⭐' },
-  { type: 'rain', label: 'Rain', icon: '🌧️' },
-  { type: 'leaves', label: 'Leaves', icon: '🍂' },
-  { type: 'matrix', label: 'Matrix', icon: '💚' },
-  { type: 'fireflies', label: 'Fireflies', icon: '✨' },
-  { type: 'petals', label: 'Petals', icon: '🌸' },
-  { type: 'butterflies', label: 'Butterflies', icon: '🦋' },
-  { type: 'sparkles', label: 'Sparkles', icon: '✨' },
-  { type: 'balloons', label: 'Balloons', icon: '🎈' },
-  { type: 'dandelion', label: 'Dandelion', icon: '🌼' },
-  { type: 'pirate', label: 'Pirate', icon: '🏴‍☠️' },
-  { type: 'bricks', label: 'Bricks', icon: '🧱' },
-  { type: 'coins', label: 'Coins', icon: '🪙' },
   { type: 'music', label: 'Music', icon: '🎵' },
   { type: 'math', label: 'Math', icon: '∑' },
+  { type: 'santa', label: 'Presents', icon: '🎁' },
+  { type: 'turkey', label: 'Turkey', icon: '🦃' },
+  { type: 'pirate', label: 'Pirate', icon: '🏴‍☠️' },
+  { type: 'dvd', label: 'DVD', icon: '📀' },
 ];
 
 const TOOLS = [
@@ -78,8 +69,6 @@ export function EffectSelector({
 
   const q = query.trim().toLowerCase();
   const shown = q ? EFFECTS.filter(e => e.label.toLowerCase().includes(q)) : EFFECTS;
-  const pro = shown.filter(e => e.pro);
-  const rest = shown.filter(e => !e.pro);
   const activeCount = selectedEffects.length;
 
   if (!visible) {
@@ -150,19 +139,8 @@ export function EffectSelector({
         </div>
       </div>
 
-      <div className="px-2 pb-1 max-h-[58vh] overflow-y-auto">
-        {pro.length > 0 && (
-          <>
-            <p className="px-2.5 pt-1 pb-1 text-[10px] font-medium uppercase tracking-wider text-neutral-500">Premium</p>
-            {pro.map(row)}
-          </>
-        )}
-        {rest.length > 0 && (
-          <>
-            <p className="px-2.5 pt-2 pb-1 text-[10px] font-medium uppercase tracking-wider text-neutral-500">All effects</p>
-            {rest.map(row)}
-          </>
-        )}
+      <div className="px-2 pb-1 max-h-[60vh] overflow-y-auto">
+        {shown.map(row)}
         {shown.length === 0 && (
           <p className="px-2.5 py-6 text-center text-[13px] text-neutral-500">No effects match “{query}”.</p>
         )}
