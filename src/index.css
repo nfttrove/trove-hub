@@ -335,6 +335,23 @@
     }
   }
 
+  @keyframes rocket-fly {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--drift, 0), -120vh);
+      opacity: 0;
+    }
+  }
+
   .animate-rocket-launch {
     animation: rocket-launch linear infinite;
   }
