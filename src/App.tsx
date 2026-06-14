@@ -9,14 +9,12 @@ import { ReactiveEffects } from './components/ReactiveEffects';
 import { ControlRoom } from './components/ControlRoom';
 import { ParticlesProvider } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import { loadEmojiShape } from '@tsparticles/shape-emoji';
 import type { Engine } from '@tsparticles/engine';
 import { useEffectConfig } from './hooks/useEffectConfig';
 import { useMarketDirection, gradientForDirection } from './lib/marketStatus';
 
 const initParticles = async (engine: Engine) => {
   await loadSlim(engine);
-  await loadEmojiShape(engine);
 };
 
 function App() {
@@ -25,7 +23,7 @@ function App() {
   const [showEffectControls, setShowEffectControls] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
   const [showControlRoom, setShowControlRoom] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(true);
+  const [menuVisible, setMenuVisible] = useState(false);
   const [celebrationConfetti, setCelebrationConfetti] = useState(false);
   const { effectTypes, deadZones, bgColors, bgImage, effectSettings, effectArea, tickerColor, loading, updateEffectTypes, updateDeadZones, updateBgColors, updateBgImage, updateEffectSettings, updateEffectArea, updateTickerColor } = useEffectConfig();
 
