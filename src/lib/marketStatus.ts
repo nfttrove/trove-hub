@@ -4,11 +4,17 @@ import type { BackgroundColors } from '../components/ColorPicker';
 
 export type Direction = 'up' | 'down' | 'flat';
 
-const POLL_MS = 30000;
+// Poll fast enough that a profit<->loss flip reads as near-real-time. The
+// feed is a cheap local DB read and the price source itself ticks every ~5s
+// during market hours, so there's nothing to gain from polling faster.
+const POLL_MS = 5000;
 
-// Dark gradients tuned to the existing palette — readable behind the widgets.
-const UP_GRADIENT: BackgroundColors = { start: '#06140d', middle: '#0c2a1a', end: '#1f5a39' };
-const DOWN_GRADIENT: BackgroundColors = { start: '#160a0a', middle: '#2a0f12', end: '#5a1f28' };
+// Vivid green/red so the day's direction is unmistakable at a glance — and so a
+// flip is obvious. Matches the house "Tropical" (up) / "Fire Red" (down)
+// presets; the old near-black gradients were so dark up and down looked
+// identical behind the widgets.
+const UP_GRADIENT: BackgroundColors = { start: '#065f46', middle: '#10b981', end: '#34d399' };
+const DOWN_GRADIENT: BackgroundColors = { start: '#7f1d1d', middle: '#dc2626', end: '#ef4444' };
 
 /** The background gradient for a given day direction, falling back to the
  *  operator's manual colours when flat/unknown. */

@@ -2,6 +2,17 @@
 
 All notable changes to trove-hub (the OBS stream control room). Newest first.
 
+## 2026-06-15 — Market-tint: brighter + near-real-time
+
+### Changed
+- **Day-direction background** is now vivid green (up) / red (down), matching the
+  house "Tropical"/"Fire Red" presets. The old gradients were so dark that up and
+  down looked nearly identical behind the widgets — the tint read as dull and a
+  profit↔loss flip was invisible.
+- **Poll interval 30s → 5s** so a flip switches near-real-time (the price source
+  itself ticks ~5s during market hours; the status feed is a cheap local read).
+  Both in `src/lib/marketStatus.ts`.
+
 ## 2026-06-14 — Stream control room overhaul
 
 Took the bolt.new scaffold to a real, self-contained control room: de-branded,
