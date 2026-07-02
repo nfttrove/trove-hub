@@ -18,7 +18,7 @@ interface StoredConfig {
 }
 
 const DEFAULTS: StoredConfig = {
-  effectTypes: ['snow'],
+  effectTypes: ['disco'],
   deadZones: [],
   bgColors: { start: '#0a1628', middle: '#1a2744', end: '#2d4a6e' },
   bgImage: { url: '', opacity: 100, useImage: false },
@@ -27,14 +27,23 @@ const DEFAULTS: StoredConfig = {
   tickerColor: false,
 };
 
+// The surviving ambient effects after the 2026-07-02 retirement (21 retired,
+// 2 kept). Stored localStorage values from before the cut will contain retired
+// names — filter them out so users don't silently render nothing.
+const VALID_EFFECT_TYPES: ReadonlySet<EffectType> = new Set(['disco', 'searchlights']);
+
 function loadStored(): StoredConfig {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULTS;
     const parsed = JSON.parse(raw);
     // Merge over defaults so a missing/renamed field never crashes the overlay.
+    const storedEffects = Array.isArray(parsed.effectTypes)
+      ? parsed.effectTypes.filter((t: unknown): t is EffectType =>
+          typeof t === 'string' && VALID_EFFECT_TYPES.has(t as EffectType))
+      : [];
     return {
-      effectTypes: Array.isArray(parsed.effectTypes) && parsed.effectTypes.length > 0 ? parsed.effectTypes : DEFAULTS.effectTypes,
+      effectTypes: storedEffects.length > 0 ? storedEffects : DEFAULTS.effectTypes,
       deadZones: Array.isArray(parsed.deadZones) ? parsed.deadZones : DEFAULTS.deadZones,
       bgColors: { ...DEFAULTS.bgColors, ...(parsed.bgColors || {}) },
       bgImage: { ...DEFAULTS.bgImage, ...(parsed.bgImage || {}) },

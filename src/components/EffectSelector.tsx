@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Bookmark, Palette, Sliders, LayoutGrid, Radio, Pin, PinOff, X } from 'lucide-react';
+import { Search, Palette, Sliders, LayoutGrid, Radio, Pin, PinOff, X } from 'lucide-react';
 
-export type EffectType = 'snow' | 'stars' | 'matrix' | 'network' | 'confetti' | 'sparkles' | 'fireflies' | 'fire' | 'rain' | 'lights' | 'disco' | 'balloons' | 'bricks' | 'rockets' | 'hearts' | 'ghosts' | 'music' | 'math' | 'santa' | 'turkey' | 'pirate' | 'dvd';
+export type EffectType = 'disco' | 'searchlights';
 
 interface EffectSelectorProps {
   selectedEffects: EffectType[];
@@ -9,7 +9,6 @@ interface EffectSelectorProps {
   onOpenSettings: () => void;
   onOpenColorPicker: () => void;
   onOpenEffectControls: () => void;
-  onOpenPresets: () => void;
   onOpenControlRoom: () => void;
   visible: boolean;
   onToggleVisible: () => void;
@@ -18,32 +17,11 @@ interface EffectSelectorProps {
 interface EffectMeta { type: EffectType; label: string; icon: string }
 
 const EFFECTS: EffectMeta[] = [
-  { type: 'snow', label: 'Snow', icon: '❄️' },
-  { type: 'stars', label: 'Stars', icon: '⭐' },
-  { type: 'matrix', label: 'Matrix', icon: '💚' },
-  { type: 'network', label: 'Network', icon: '🕸️' },
-  { type: 'confetti', label: 'Confetti', icon: '🎊' },
-  { type: 'sparkles', label: 'Sparkles', icon: '✨' },
-  { type: 'fireflies', label: 'Fireflies', icon: '🔆' },
-  { type: 'fire', label: 'Fire', icon: '🔥' },
-  { type: 'rain', label: 'Rain', icon: '🌧️' },
-  { type: 'lights', label: 'Lights', icon: '🎄' },
   { type: 'disco', label: 'Disco', icon: '🪩' },
-  { type: 'balloons', label: 'Balloons', icon: '🎈' },
-  { type: 'bricks', label: 'Bricks', icon: '🧱' },
-  { type: 'rockets', label: 'Rockets', icon: '🚀' },
-  { type: 'hearts', label: 'Hearts', icon: '❤️' },
-  { type: 'ghosts', label: 'Ghosts', icon: '👻' },
-  { type: 'music', label: 'Music', icon: '🎵' },
-  { type: 'math', label: 'Math', icon: '∑' },
-  { type: 'santa', label: 'Presents', icon: '🎁' },
-  { type: 'turkey', label: 'Turkey', icon: '🦃' },
-  { type: 'pirate', label: 'Pirate', icon: '🏴‍☠️' },
-  { type: 'dvd', label: 'DVD', icon: '📀' },
+  { type: 'searchlights', label: 'Searchlights', icon: '💫' },
 ];
 
 const TOOLS = [
-  { key: 'presets', label: 'Presets', Icon: Bookmark },
   { key: 'colors', label: 'Colors', Icon: Palette },
   { key: 'motion', label: 'Motion', Icon: Sliders },
   { key: 'layout', label: 'Layout', Icon: LayoutGrid },
@@ -52,7 +30,7 @@ const TOOLS = [
 
 export function EffectSelector({
   selectedEffects, onEffectsChange, onOpenSettings, onOpenColorPicker,
-  onOpenEffectControls, onOpenPresets, onOpenControlRoom, visible, onToggleVisible,
+  onOpenEffectControls, onOpenControlRoom, visible, onToggleVisible,
 }: EffectSelectorProps) {
   const [query, setQuery] = useState('');
   const [near, setNear] = useState(false);
@@ -83,8 +61,7 @@ export function EffectSelector({
     onEffectsChange(selectedEffects.includes(t) ? selectedEffects.filter(e => e !== t) : [...selectedEffects, t]);
 
   const openTool = (key: typeof TOOLS[number]['key']) => {
-    if (key === 'presets') onOpenPresets();
-    else if (key === 'colors') onOpenColorPicker();
+    if (key === 'colors') onOpenColorPicker();
     else if (key === 'motion') onOpenEffectControls();
     else if (key === 'layout') onOpenSettings();
     else if (key === 'audio') onOpenControlRoom();

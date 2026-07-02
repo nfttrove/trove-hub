@@ -4,38 +4,21 @@ import { EffectSelector } from './components/EffectSelector';
 import { DeadZoneConfig } from './components/DeadZoneConfig';
 import { ColorPicker } from './components/ColorPicker';
 import { EffectControls } from './components/EffectControls';
-import { PresetSelector } from './components/PresetSelector';
 import { ReactiveEffects } from './components/ReactiveEffects';
 import { ControlRoom } from './components/ControlRoom';
-import { ParticlesProvider } from '@tsparticles/react';
-import { loadSlim } from '@tsparticles/slim';
-import type { Engine } from '@tsparticles/engine';
 import { useEffectConfig } from './hooks/useEffectConfig';
 import { useMarketDirection, gradientForDirection } from './lib/marketStatus';
-
-const initParticles = async (engine: Engine) => {
-  await loadSlim(engine);
-};
 
 function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showEffectControls, setShowEffectControls] = useState(false);
-  const [showPresets, setShowPresets] = useState(false);
   const [showControlRoom, setShowControlRoom] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [celebrationConfetti, setCelebrationConfetti] = useState(false);
   const { effectTypes, deadZones, bgColors, bgImage, effectSettings, effectArea, tickerColor, loading, updateEffectTypes, updateDeadZones, updateBgColors, updateBgImage, updateEffectSettings, updateEffectArea, updateTickerColor } = useEffectConfig();
 
   const direction = useMarketDirection(tickerColor);
   const effectiveBgColors = tickerColor ? gradientForDirection(direction, bgColors) : bgColors;
-
-  const handleDVDCornerHit = () => {
-    setCelebrationConfetti(true);
-    setTimeout(() => {
-      setCelebrationConfetti(false);
-    }, 20000);
-  };
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -60,18 +43,15 @@ function App() {
     );
   }
 
-  const activeEffects = [...effectTypes, ...(celebrationConfetti ? ['confetti' as const] : [])];
-
   return (
-    <ParticlesProvider init={initParticles}>
+    <>
       <EffectScene
-        effectTypes={activeEffects}
+        effectTypes={effectTypes}
         deadZones={deadZones}
         bgColors={effectiveBgColors}
         bgImage={bgImage}
         effectSettings={effectSettings}
         effectArea={effectArea}
-        onDVDCornerHit={handleDVDCornerHit}
       />
       <ReactiveEffects />
       <EffectSelector
@@ -80,7 +60,6 @@ function App() {
         onOpenSettings={() => setShowSettings(true)}
         onOpenColorPicker={() => setShowColorPicker(true)}
         onOpenEffectControls={() => setShowEffectControls(true)}
-        onOpenPresets={() => setShowPresets(true)}
         onOpenControlRoom={() => setShowControlRoom(true)}
         visible={menuVisible}
         onToggleVisible={() => setMenuVisible(!menuVisible)}
@@ -112,21 +91,10 @@ function App() {
           onClose={() => setShowEffectControls(false)}
         />
       )}
-      {showPresets && (
-        <PresetSelector
-          onApplyPreset={(effects, colors) => {
-            updateEffectTypes(effects);
-            updateBgColors(colors);
-          }}
-          currentEffects={effectTypes}
-          currentColors={bgColors}
-          onClose={() => setShowPresets(false)}
-        />
-      )}
       {showControlRoom && (
         <ControlRoom onClose={() => setShowControlRoom(false)} />
       )}
-    </ParticlesProvider>
+    </>
   );
 }
 

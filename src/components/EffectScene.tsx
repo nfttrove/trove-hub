@@ -2,29 +2,8 @@ import type { EffectType } from './EffectSelector';
 import type { DeadZone } from './DeadZoneConfig';
 import type { BackgroundColors, BackgroundImage } from './ColorPicker';
 import type { EffectSettings } from './EffectControls';
-import { SnowEffect } from './effects/SnowEffect';
-import { StarsEffect } from './effects/StarsEffect';
-import { SparklesEffect } from './effects/SparklesEffect';
-import { FirefliesEffect } from './effects/FirefliesEffect';
-import { FireEffect } from './effects/FireEffect';
-import { RainEffect } from './effects/RainEffect';
-import { LightsEffect } from './effects/LightsEffect';
 import { DiscoEffect } from './effects/DiscoEffect';
-import { ConfettiEffect } from './effects/ConfettiEffect';
-import { BalloonsEffect } from './effects/BalloonsEffect';
-import { BrickEffect } from './effects/BrickEffect';
-import { RocketsEffect } from './effects/RocketsEffect';
-import { HeartsEffect } from './effects/HeartsEffect';
-import { GhostsEffect } from './effects/GhostsEffect';
-import { MusicNotesEffect } from './effects/MusicNotesEffect';
-import { MathEffect } from './effects/MathEffect';
-import { SantaPresentsEffect } from './effects/SantaPresentsEffect';
-import { TurkeyEffect } from './effects/TurkeyEffect';
-import { PirateEffect } from './effects/PirateEffect';
-import { MatrixEffect } from './effects/MatrixEffect';
-import { DVDEffect } from './effects/DVDEffect';
-import { ParticleField } from './effects/particles/ParticleField';
-import { networkConfig } from './effects/particles/configs';
+import { SearchlightsEffect } from './effects/SearchlightsEffect';
 import { buildEffectMaskImage, DEFAULT_EFFECT_AREA, type EffectArea } from '../lib/mask';
 
 interface EffectSceneProps {
@@ -34,35 +13,14 @@ interface EffectSceneProps {
   bgImage: BackgroundImage;
   effectSettings: EffectSettings;
   effectArea?: EffectArea;
-  onDVDCornerHit?: () => void;
 }
 
-export function EffectScene({ effectTypes, deadZones, bgColors, bgImage, effectSettings, effectArea = DEFAULT_EFFECT_AREA, onDVDCornerHit }: EffectSceneProps) {
+export function EffectScene({ effectTypes, deadZones, bgColors, bgImage, effectSettings, effectArea = DEFAULT_EFFECT_AREA }: EffectSceneProps) {
   const renderEffect = (effectType: EffectType) => {
     const props = { speed: effectSettings.speed, rotation: effectSettings.rotation };
     switch (effectType) {
-      case 'snow': return <SnowEffect key="snow" {...props} />;
-      case 'stars': return <StarsEffect key="stars" {...props} />;
-      case 'sparkles': return <SparklesEffect key="sparkles" {...props} />;
-      case 'fireflies': return <FirefliesEffect key="fireflies" {...props} />;
-      case 'fire': return <FireEffect key="fire" {...props} />;
-      case 'rain': return <RainEffect key="rain" {...props} />;
-      case 'lights': return <LightsEffect key="lights" {...props} />;
       case 'disco': return <DiscoEffect key="disco" {...props} />;
-      case 'confetti': return <ConfettiEffect key="confetti" {...props} />;
-      case 'balloons': return <BalloonsEffect key="balloons" {...props} />;
-      case 'bricks': return <BrickEffect key="bricks" {...props} />;
-      case 'rockets': return <RocketsEffect key="rockets" {...props} />;
-      case 'hearts': return <HeartsEffect key="hearts" {...props} />;
-      case 'ghosts': return <GhostsEffect key="ghosts" {...props} />;
-      case 'music': return <MusicNotesEffect key="music" {...props} />;
-      case 'math': return <MathEffect key="math" {...props} />;
-      case 'santa': return <SantaPresentsEffect key="santa" {...props} />;
-      case 'turkey': return <TurkeyEffect key="turkey" {...props} />;
-      case 'pirate': return <PirateEffect key="pirate" {...props} />;
-      case 'matrix': return <MatrixEffect key="matrix" {...props} />;
-      case 'network': return <ParticleField key="network" id="network" options={networkConfig} />;
-      case 'dvd': return <DVDEffect key="dvd" {...props} customText={effectSettings.customText} onCornerHit={onDVDCornerHit} />;
+      case 'searchlights': return <SearchlightsEffect key="searchlights" {...props} />;
       default: return null;
     }
   };

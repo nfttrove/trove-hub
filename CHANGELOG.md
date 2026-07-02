@@ -2,6 +2,31 @@
 
 All notable changes to trove-hub (the OBS stream control room). Newest first.
 
+## 2026-07-02 — Particle effects retirement: 21 ambient → 2 (disco + searchlights)
+
+The operator confirmed only two ambient effects are wanted (`searchlights` + `disco`); the other 21 were accumulated thematic filler (snow, santa, turkey, pirate, etc.) that wasn't being used. Retired them and the dependencies they pulled in. Reactive (event-triggered) effects are unchanged — confetti on signal-win and matrix-rain on breaker-trip still fire, kept alive for the reactive path only.
+
+### Removed
+- **21 ambient effect components** (`src/components/effects/`): Snow, Stars, Matrix, Network (ParticleField), Sparkles, Fireflies, Fire, Rain, Lights, Balloons, Bricks, Rockets, Hearts, Ghosts, MusicNotes, Math, SantaPresents, Turkey, Pirate, DVD. Plus `Snowflake.tsx` (orphaned helper) and the entire `particles/` subdirectory.
+- **`PresetSelector.tsx` + `lib/customPresets.ts`** — every preset referenced retired effects. The whole presets UI is gone (the TOOLS grid drops from 5 → 4: Colors, Motion, Layout, Audio).
+- **`@tsparticles/*` dependencies** (engine, react, slim, shape-emoji) — orphaned by the ParticleField/network removal. ~145KB off the bundle (335KB → 190KB JS).
+- **DVD celebration hook** in App.tsx — `celebrationConfetti` state + `handleDVDCornerHit` + the `activeEffects` confetti append. DVD is gone, so the whole corner-hit → confetti mechanism is dead.
+
+### Changed
+- **`EffectType` union** shrunk 23 → 2 (`'disco' | 'searchlights'`). The `EFFECTS` picker array matches.
+- **`EffectScene` switch** pruned to the 2 keepers; `case 'searchlights':` restored (it was in the live `dist/` bundle but had regressed out of source — selecting it rendered nothing). Both keepers now actually render.
+- **Default effect** in `useEffectConfig`: `['snow']` → `['disco']`. Existing users with stored `['snow']` get filtered against the surviving union and fall back to the new default (localStorage migration).
+- **`index.css`** pruned from 640 → ~110 lines. Only the reactive-effect keyframes survive (siren, confetti, matrix, fall for SkullStorm). Disco + searchlights define their keyframes inline in their components.
+
+### Not changed (deliberately)
+- **Reactive effects** (`ReactiveEffects.tsx`) untouched — confetti (signal_win), matrix (breaker_trip), siren (warrant_siren), skull-storm (bearish_call) all still fire on stream events. `ConfettiEffect.tsx` and `MatrixEffect.tsx` survive as reactive-only, not ambient-selectable.
+- **`customText` in `EffectSettings`** is now unused (only DVD consumed it) but stays in the type + EffectControls UI — harmless, deferred cleanup.
+
+### Verification
+- `npm run typecheck` — clean.
+- `npm run build` — succeeded (190KB JS, 20KB CSS, down from 335KB JS / 35KB CSS).
+- Operator visual smoke-check on `:4173` pending (the running `vite preview` serves the OLD bundle until restarted off-stream).
+
 ## 2026-06-15 — Market-tint: brighter + near-real-time
 
 ### Changed
