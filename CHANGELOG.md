@@ -2,6 +2,21 @@
 
 All notable changes to trove-hub (the OBS stream control room). Newest first.
 
+## 2026-07-07 — Palette cascade: commit the source-side scheme POST
+
+The TroveHub→OBS palette cascade froze on 2026-07-02: the scheme POST to
+`:8765/palette/scheme` lived only in the built `dist/` (never committed), so the
+`App.tsx` refactor + rebuild that day silently dropped it and every overlay stuck
+on the last-pushed scheme (`bull`/green, even on down days). Re-added as
+`src/lib/paletteSync.ts` (`resolveScheme` + `hexToChannels` + `usePaletteSync`)
+and wired into `App.tsx` — **committed now** so a rebuild can't drop it again.
+
+Resolution rule (mirrors the server contract): Ambient ON + up → `bull`, + down →
+`bear`; Ambient OFF or flat → `default` with accent = the first hex of the picked
+gradient. Deduped, fire-and-forget. Paired with a server-side market-driven
+fallback in the agent repo so the Ambient cascade survives even with this tab
+closed.
+
 ## 2026-07-02 — Particle effects retirement: 21 ambient → 2 (disco + searchlights)
 
 The operator confirmed only two ambient effects are wanted (`searchlights` + `disco`); the other 21 were accumulated thematic filler (snow, santa, turkey, pirate, etc.) that wasn't being used. Retired them and the dependencies they pulled in. Reactive (event-triggered) effects are unchanged — confetti on signal-win and matrix-rain on breaker-trip still fire, kept alive for the reactive path only.
