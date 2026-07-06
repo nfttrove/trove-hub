@@ -8,6 +8,7 @@ import { ReactiveEffects } from './components/ReactiveEffects';
 import { ControlRoom } from './components/ControlRoom';
 import { useEffectConfig } from './hooks/useEffectConfig';
 import { useMarketDirection, gradientForDirection } from './lib/marketStatus';
+import { usePaletteSync } from './lib/paletteSync';
 
 function App() {
   const [showSettings, setShowSettings] = useState(false);
@@ -19,6 +20,10 @@ function App() {
 
   const direction = useMarketDirection(tickerColor);
   const effectiveBgColors = tickerColor ? gradientForDirection(direction, bgColors) : bgColors;
+
+  // Cascade the resolved scheme to every OBS overlay (the source side of the
+  // TroveHub -> :8765/palette/scheme bridge). tickerColor is the Ambient toggle.
+  usePaletteSync(tickerColor, direction, bgColors);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
